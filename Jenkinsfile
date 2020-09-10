@@ -37,6 +37,7 @@ agent any
 
         stage('backend tests') {
             steps {
+            script {
                 try {
                     sh "./mvnw -ntp verify -P-webpack"
                 } catch (err) {
@@ -44,17 +45,20 @@ agent any
                 } finally {
                     junit '**/target/test-results/**/TEST-*.xml'
                 }
+                }
             }
         }
 
         stage('frontend tests') {
             steps {
+            script {
                 try {
                     sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test'"
                 } catch (err) {
                     throw err
                 } finally {
                     junit '**/target/test-results/**/TEST-*.xml'
+                }
                 }
             }
         }

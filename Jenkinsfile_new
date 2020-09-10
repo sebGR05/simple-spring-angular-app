@@ -9,24 +9,10 @@ agent any
         //    steps {   sh "java -version"}
         //}
 
-        stage('clean') {
-            steps {
-                sh "chmod +x mvnw"
 
-            sh "./mvnw -ntp clean -P-webpack"
-            }
-        }
-
-
-        stage('packaging') {
-            steps {
-                sh "./mvnw -ntp verify -P-webpack -Pprod -DskipTests"
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-            }
-        }
         stage('deploy') {
                     steps {
-                        sh "nohup java -jar **/target/simple-spring-angular-app-0.0.1-SNAPSHOT.jar &"
+                        sh "nohup java -jar target/simple-spring-angular-app-0.0.1-SNAPSHOT.jar &"
                     }
                 }
         //stage('quality analysis') {

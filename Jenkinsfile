@@ -32,6 +32,7 @@ agent any
 
         stage('npm install') {
             steps {  sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm"
+            }
         }
 
         stage('backend tests') {

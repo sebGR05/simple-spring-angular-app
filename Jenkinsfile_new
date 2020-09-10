@@ -9,6 +9,60 @@ agent any
         //    steps {   sh "java -version"}
         //}
 
+        stage('clean') {
+            steps {
+                sh "chmod +x mvnw"
+
+            sh "./mvnw -ntp clean -P-webpack"
+            }
+        }
+        stage('nohttp') {
+            steps {
+                sh "./mvnw -ntp checkstyle:check"
+
+            }
+        }
+
+        stage('install tools') {
+            steps {
+                sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v12.16.1 -DnpmVersion=6.14.5"
+
+            }
+        }
+
+        stage('npm install') {
+            steps {  sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm"
+            }
+        }
+
+        stage('backend tests') {
+            steps {
+            script {
+                try {
+                    sh "./mvnw -ntp verify -P-webpack"
+                } catch (err) {
+                    throw err
+                } finally {
+                    junit '**/target/test-results/**/TEST-*.xml'
+                }
+                }
+            }
+        }
+
+        stage('frontend tests') {
+            steps {
+            script {
+                try {
+                    sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test'"
+                } catch (err) {
+                    throw err
+                } finally {
+                    junit '**/target/test-results/**/TEST-*.xml'
+                }
+                }
+            }
+        }
+
         stage('packaging') {
             steps {
                 sh "./mvnw -ntp verify -P-webpack -Pdev -DskipTests"
@@ -17,7 +71,7 @@ agent any
         }
         stage('deploy') {
                     steps {
-                        sh "nohup java -jar target/simple-spring-angular-app-0.0.1-SNAPSHOT.jar "
+                        sh "nohup java -jar target/simple-spring-angular-app-0.0.1-SNAPSHOT.jar"
                     }
                 }
         //stage('quality analysis') {

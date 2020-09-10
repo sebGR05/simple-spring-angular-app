@@ -19,12 +19,7 @@ agent any
 
 
 
-       /** stage('packaging') {
-            steps {
-                sh "./mvnw -ntp verify -P-webpack -Pprod -DskipTests"
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-            }
-        }*/
+
          stage('package and deploy') {
          steps {
                     sh "./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=simple-spring-angular-app"

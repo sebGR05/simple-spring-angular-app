@@ -28,7 +28,8 @@ management:
 spring:
   devtools:
     restart:
-      enabled: false
+      enabled: true
+      additional-exclude: static/**,.h2.server.properties
     livereload:
       enabled: false
   datasource:

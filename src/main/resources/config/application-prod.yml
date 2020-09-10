@@ -28,25 +28,21 @@ management:
 spring:
   devtools:
     restart:
-      enabled: true
-      additional-exclude: static/**,.h2.server.properties
+      enabled: false
     livereload:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:simple_spring_angular_app;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:postgresql://localhost:5432/simple_spring_angular_app
     username: simple_spring_angular_app
-    password:
+    password: password
     hikari:
       poolName: Hikari
       auto-commit: false
-  h2:
-    console:
-      enabled: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
-    show-sql: true
-    # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
+    database-platform: io.github.jhipster.domain.util.FixedPostgreSQL10Dialect
+    show-sql: false
+  # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
     contexts: prod
   mail:

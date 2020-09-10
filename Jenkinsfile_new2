@@ -1,0 +1,43 @@
+pipeline {
+agent any
+    stages {
+        stage('checkout') {
+            steps {  checkout scm}
+        }
+
+      //  stage('check java') {
+        //    steps {   sh "java -version"}
+        //}
+
+        stage('clean') {
+            steps {
+                sh "chmod +x mvnw"
+
+            sh "./mvnw -ntp clean -P-webpack"
+            }
+        }
+
+
+
+       /** stage('packaging') {
+            steps {
+                sh "./mvnw -ntp verify -P-webpack -Pprod -DskipTests"
+                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+            }
+        }*/
+         stage('package and deploy') {
+         steps {
+                    sh "./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=simple-spring-angular-app"
+                    archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+                }
+
+         }
+        //stage('quality analysis') {
+        //    steps {
+        //        withSonarQubeEnv('sonar') {
+        //            sh "./mvnw -ntp initialize sonar:sonar"
+        //        }
+        //    }
+        //}
+    }
+}

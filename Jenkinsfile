@@ -1,80 +1,62 @@
-pipeline {
-agent any
-    stages {
-        stage('checkout') {
-            steps {  checkout scm}
-        }
+#!/usr/bin/env groovy
 
-      //  stage('check java') {
-        //    steps {   sh "java -version"}
-        //}
+node {
+    stage('checkout') {
+        checkout scm
+    }
+
+    docker.image('jhipster/jhipster:v6.10.1').inside('-u jhipster -e MAVEN_OPTS="-Duser.home=./"') {
+        stage('check java') {
+            sh "java -version"
+        }
 
         stage('clean') {
-            steps {
-                sh "chmod +x mvnw"
-
+            sh "chmod +x mvnw"
             sh "./mvnw -ntp clean -P-webpack"
-            }
         }
         stage('nohttp') {
-            steps {
-                sh "./mvnw -ntp checkstyle:check"
-
-            }
+            sh "./mvnw -ntp checkstyle:check"
         }
 
         stage('install tools') {
-            steps {
-                sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v12.16.1 -DnpmVersion=6.14.5"
-
-            }
+            sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v12.16.1 -DnpmVersion=6.14.5"
         }
 
         stage('npm install') {
-            steps {  sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm"
-            }
+            sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm"
         }
 
-        stage('backend tests') {
-            steps {
-            script {
-                try {
-                    sh "./mvnw -ntp verify -P-webpack"
-                } catch (err) {
-                    throw err
-                } finally {
-                    junit '**/target/test-results/**/TEST-*.xml'
-                }
-                }
-            }
-        }
+      /**  stage('backend tests') {
+            try {
+                sh "./mvnw -ntp verify -P-webpack"
+            } catch(err) {
+                throw err
+            } finally {*/
+           //     junit '**/target/test-results/**/TEST-*.xml'
+          //  }
+        //}
 
-        stage('frontend tests') {
-            steps {
-            script {
-                try {
-                    sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test'"
-                } catch (err) {
-                    throw err
-                } finally {
-                    junit '**/target/test-results/**/TEST-*.xml'
-                }
-                }
-            }
-        }
+       /** stage('frontend tests') {
+            try {
+               npm install
+               npm test
+            } catch(err) {
+                throw err
+            } finally {*//
+           //     junit '**/target/test-results/**/TEST-*.xml'
+          //  }
+        //}
 
-        stage('packaging') {
-            steps {
-                sh "./mvnw -ntp verify -P-webpack -Pprod -DskipTests"
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-            }
+        stage('package and deploy') {
+            sh "./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=simple-spring-angular-app"
+            archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
         }
-        stage('quality analysis') {
-            steps {
-                withSonarQubeEnv('sonar') {
-                    sh "./mvnw -ntp initialize sonar:sonar"
-                }
-            }
-        }
+    }
+
+    def dockerImage
+    stage('publish docker') {
+        // A pre-requisite to this step is to setup authentication to the docker registry
+        // https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin#authentication-methods
+        sh "./mvnw -ntp jib:build"
     }
 }

@@ -27,7 +27,7 @@ pipeline {
             parallel {
                 stage ('Branch A') {
                     steps {
-                        echo 'Etape branche A'
+                        echoo 'Etape branche A'
                     }
                 }
                 stage ('Branch B') {

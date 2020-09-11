@@ -48,7 +48,7 @@ node {
                npm test
             } catch(err) {
                 throw err
-            } finally {*//
+            } finally {*/
            //     junit '**/target/test-results/**/TEST-*.xml'
           //  }
         //}

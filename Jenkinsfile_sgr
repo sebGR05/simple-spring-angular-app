@@ -27,7 +27,9 @@ node {
         }
 
         stage('Test_sgr') {
-            echo 'Hello Im Sebastien'
+            steps {
+                echo 'Hello Im Sebastien'
+            }
         }
 
         /**  stage('backend tests') {

@@ -22,7 +22,7 @@ pipeline {
 	stages {
         stage('Test_sgr') {
 			steps {
-				java -version
+				echo 'Hello Im SGR'
 			}
 		}
 	}

@@ -18,12 +18,9 @@ pipeline {
                 sh 'java -version'
             }
         }
-        stage('not_execute') {
-            when {
-                branch 'dev'
-            }
+        stage('Before') {
             steps {
-                echo 'Hello branch dev'
+                echo 'Etape avant'
             }
         }
         stage('Deploy') {
@@ -38,6 +35,11 @@ pipeline {
                         echo 'Etape brnche B'
                     }
                 }
+            }
+        }
+        stage('After') {
+            steps {
+                echo 'Etape apres'
             }
         }
     }

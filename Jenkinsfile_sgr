@@ -11,11 +11,19 @@ pipeline {
     stages {
         stage('check_java') {
             when {
-                branch 'dev'
+                branch 'master'
             }
             steps {
                 echo 'Hello, JDK'
                 sh 'java -version'
+            }
+        }
+         stage('not_execute') {
+            when {
+                branch 'dev'
+            }
+            steps {
+                echo 'Hello, JDK'
             }
         }
     }

@@ -10,8 +10,11 @@ pipeline {
     }*/
     stages {
         stage('check_java') {
+            when {
+                branch 'master'
+            }
             steps {
-                echo 'Hello, JDK'
+                echo 'Hello check_java'
                 sh 'java -version'
             }
         }
@@ -20,7 +23,7 @@ pipeline {
                 branch 'dev'
             }
             steps {
-                echo 'Hello dev'
+                echo 'Hello branch dev'
             }
         }
     }

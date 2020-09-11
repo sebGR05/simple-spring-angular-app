@@ -26,5 +26,10 @@ pipeline {
                 echo 'Hello, JDK'
             }
         }
+        post {
+            always {
+                echo 'Hello World'
+            }
+        }
     }
 }

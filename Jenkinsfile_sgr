@@ -16,15 +16,10 @@ pipeline {
 	agent {
 		docker {
 			image 'openjdk:8-jdk-alpine'
-			args '-p 8081:8081'
+			args '-p 8085:8085'
 		}
 	}
 	stages {
-		stage('Build') {
-			steps {
-				sh 'npm install'
-			}
-		}
         stage('Test_sgr') {
 			steps {
 				java -version

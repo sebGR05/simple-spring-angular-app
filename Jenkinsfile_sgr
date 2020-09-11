@@ -16,7 +16,7 @@ pipeline {
 	agent {
 		docker {
 			image 'openjdk:8-jdk-alpine'
-			args '-p 8090:8090'
+			args '-p 8081:8081'
 		}
 	}
 	stages {
@@ -27,7 +27,7 @@ pipeline {
 		}
         stage('Test_sgr') {
 			steps {
-				echo 'Hello Im SGR'
+				java -version
 			}
 		}
 	}

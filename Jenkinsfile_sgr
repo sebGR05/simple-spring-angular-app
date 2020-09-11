@@ -5,11 +5,14 @@ pipeline {
             args '-p 8085:8080'
         }
     }
-    triggers {
-        cron('H/1 * * * *')
-    }
+    /*triggers {
+        cron('0 * * ? * *')
+    }*/
     stages {
         stage('check_java') {
+            when {
+                branche 'dev'
+            }
             steps {
                 echo 'Hello, JDK'
                 sh 'java -version'

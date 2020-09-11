@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('check_java') {
             when {
-                branch 'master'
+                branch 'dev'
             }
             steps {
                 echo 'Hello check_java'
@@ -44,7 +44,7 @@ pipeline {
         }
     }
     post {
-        failure {
+        always {
              echo 'Hello World'
         }
     }

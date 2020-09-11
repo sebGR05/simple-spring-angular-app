@@ -5,7 +5,9 @@ pipeline {
             args '-p 8085:8080'
         }
     }
-    
+    triggers {
+        cron(0/15 0 0 ? * * *)
+    }
     stages {
         stage('check_java') {
             steps {

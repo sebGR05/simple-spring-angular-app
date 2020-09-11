@@ -26,6 +26,20 @@ pipeline {
                 echo 'Hello branch dev'
             }
         }
+        stage('Deploy') {
+            parallel {
+                stage ('Branch A') {
+                    steps {
+                        echo 'Etape branche A'
+                    }
+                }
+                stage ('Branch B') {
+                    steps {
+                        echo 'Etape brnche B'
+                    }
+                }
+            }
+        }
     }
     post {
         always {

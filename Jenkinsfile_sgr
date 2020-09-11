@@ -23,10 +23,10 @@ pipeline {
                 echo 'Hello dev'
             }
         }
-        post {
-            always {
-                echo 'Hello World'
-            }
+    }
+    post {
+        always {
+             echo 'Hello World'
         }
     }
 }
